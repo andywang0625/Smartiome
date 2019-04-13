@@ -1,3 +1,6 @@
 *.pyc
 *.json
 *.mp3
+*.xml
+Pipfile
+*.iml

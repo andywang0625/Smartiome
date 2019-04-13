@@ -28,6 +28,7 @@ def test():
 
 eventManager = EventManager()
 EVENT_INCOMING = "Incoming"
+EVENT_COMMAND = "Command"
 
 def TelegramBot():
     try:
@@ -37,30 +38,35 @@ def TelegramBot():
             data = json.load(json_file)
         dp, updater = TelegramBotInit(data['api'], logger)
         tgb = TelegramBotLinstener(logger, dp, updater)
-        eventManager.AddEventListener(EVENT_INCOMING, tgb.talkToMaster)
-        #em = EventManager()
-        #em.AddEventListener()
-        #TelegramBotLinstener(logger,data['api'])
     except BaseException as e:
         logger.printError(info="TelegramBotLinstener Start")
-
-def TTS():
-    try:
-        from Smartiome.Adaptors.Frontend.TTSLinstenner import TTSLinstener
-        tts = TTSLinstener(logger)
-        eventManager.AddEventListener(EVENT_INCOMING, tts.ReadMessage)
-    except BaseException as e:
-        logger.printError(action="TTS Start", info=e)
+    return tgb, dp, updater
 
 def ConsoleSource():
     from Smartiome.Adaptors.Backend.ConsoleEventSource import ConsoleEventSource
-    Source = ConsoleEventSource(eventManager, EVENT_INCOMING)
+    Source = ConsoleEventSource(eventManager, EVENT_COMMAND)
     Source.SendMessage()
 
+def TelegramBotSource(logger, dp, updater):
+    from Smartiome.Adaptors.Backend.TelegramBotSource import TelegramBotSource
+    Source = TelegramBotSource(eventManager, EVENT_COMMAND, logger, dp, updater)
 
-TelegramBot()
-TTS()
+from Smartiome.Adaptors.Frontend.TTSLinstenner import TTSLinstener
+tts = TTSLinstener()
+tts.init(logger=logger, eventManager=EventManager, TYPE=EVENT_INCOMING)
+
+tgb, dp, updater = TelegramBot()
+eventManager.AddEventListener(EVENT_INCOMING, tts.ReadMessage)
+eventManager.AddEventListener(EVENT_COMMAND, tts.ReadMessage)
+eventManager.AddEventListener(EVENT_INCOMING, tgb.talkToMaster)
+eventManager.AddEventListener(EVENT_COMMAND, tgb.talkToMaster)
+
+
 
 eventManager.Start()
+TelegramBotSource(logger, dp, updater)
 
-ConsoleSource()
+
+
+
+#ConsoleSource()

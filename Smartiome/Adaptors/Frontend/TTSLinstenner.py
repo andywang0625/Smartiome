@@ -7,10 +7,14 @@ import time
 import datetime
 
 
-class TTSLinstener:
-    def __init__(self, logger):
+class TTSLinstener():
+    def __init__(self):
+        pass
+
+    def init(self, logger, eventManager, TYPE):
+        self.TYPE = TYPE
         self.logger = logger
-        logger.printInfo("TTSLinstener", "Started")
+        self.logger.printInfo("TTSLinstener", "Started")
         tts = gTTS('TTS Linstener Enabled', 'en')
         t = str(int(time.time()))
         tts.save("tmp/"+t+".mp3")
