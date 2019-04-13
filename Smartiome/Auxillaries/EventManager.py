@@ -1,6 +1,12 @@
 from queue import Queue, Empty
 from threading import *
 
+class EType(object):
+    INNEREVENT = "innerevent"
+    BROADCAST = "broadcast"
+    COMMAND = "command"
+    OUTPUT = "output"
+
 
 class EventManager:
     def __init__(self):
@@ -14,7 +20,7 @@ class EventManager:
     def __Run(self):
         while self.__active == True:
             try:
-                event = self.__eventQueue.get(block=True, timeout=1)
+                event = self.__eventQueue.get(block=False)
                 self.__EventProcess(event)
             except Empty:
                 pass

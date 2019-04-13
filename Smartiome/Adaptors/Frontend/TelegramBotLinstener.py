@@ -19,8 +19,22 @@ class TelegramBotLinstener:
         self.updater.idle()
 
     def talkToMaster(self, event):
-        self.dp.bot.send_message(chat_id="409297171", text=event.data["Event"])
+        if event.data["Event"] != "":
+            self.dp.bot.send_message(chat_id="409297171", text=event.data["Event"])
+        else:
+            self.dp.bot.send_message(chat_id="409297171", text="Message is Empty")
 
+    def talkTo(self, event):
+        try:
+            event.data["ChatId"]
+            chatId = event.data["ChatId"]
+        except:
+            chatId = "409297171" #send to master
+
+        if event.data["Event"] != "":
+            self.dp.bot.send_message(chat_id=chatId, text=event.data["Event"])
+        else:
+            self.dp.bot.send_message(chat_id=chatId, text="Message is Empty")
 
 def TelegramBotInit(API, logger) -> Dispatcher:
     try:

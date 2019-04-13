@@ -24,9 +24,12 @@ class TTSLinstener():
         pass
 
     def ReadMessage(self, event):
-        tts = gTTS(str(event.data["Event"]), 'en')
-        t = str(int(time.time()))
-        tts.save("tmp/"+t+".mp3")
-        playsound.playsound("tmp/"+t+".mp3")
-        os.remove("tmp/"+t+".mp3")
-        del tts
+        try:
+            tts = gTTS(str(event.data["Event"]), 'en')
+            t = str(int(time.time()))
+            tts.save("tmp/"+t+".mp3")
+            playsound.playsound("tmp/"+t+".mp3")
+            os.remove("tmp/"+t+".mp3")
+            del tts
+        except BaseException as e:
+            self.logger.printInfo("TTSLinstener", str(e))

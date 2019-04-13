@@ -8,7 +8,7 @@ from Smartiome.Auxillaries.SystemLogger import *
 logger = SystemLogger()
 
 def test():
-    EVENT_INCOMING = "Event_Incoming"
+    EVENT_INCOMING = EType.BROADCAST
 
     from Smartiome.Adaptors.Backend.TestEventSource import TestEventSource
     from Smartiome.Adaptors.Frontend.TestLinstener import TestLinstener
@@ -27,8 +27,6 @@ def test():
     timer.start()
 
 eventManager = EventManager()
-EVENT_INCOMING = "Incoming"
-EVENT_COMMAND = "Command"
 
 def TelegramBot():
     try:
@@ -44,22 +42,23 @@ def TelegramBot():
 
 def ConsoleSource():
     from Smartiome.Adaptors.Backend.ConsoleEventSource import ConsoleEventSource
-    Source = ConsoleEventSource(eventManager, EVENT_COMMAND)
+    Source = ConsoleEventSource(eventManager, EType.COMMAND)
     Source.SendMessage()
 
 def TelegramBotSource(logger, dp, updater):
     from Smartiome.Adaptors.Backend.TelegramBotSource import TelegramBotSource
-    Source = TelegramBotSource(eventManager, EVENT_COMMAND, logger, dp, updater)
+    Source = TelegramBotSource(eventManager, EType.COMMAND, logger, dp, updater)
 
 from Smartiome.Adaptors.Frontend.TTSLinstenner import TTSLinstener
 tts = TTSLinstener()
-tts.init(logger=logger, eventManager=EventManager, TYPE=EVENT_INCOMING)
+tts.init(logger=logger, eventManager=EventManager, TYPE=EType.BROADCAST)
 
 tgb, dp, updater = TelegramBot()
-eventManager.AddEventListener(EVENT_INCOMING, tts.ReadMessage)
-eventManager.AddEventListener(EVENT_COMMAND, tts.ReadMessage)
-eventManager.AddEventListener(EVENT_INCOMING, tgb.talkToMaster)
-eventManager.AddEventListener(EVENT_COMMAND, tgb.talkToMaster)
+eventManager.AddEventListener(EType.BROADCAST, tgb.talkTo)
+eventManager.AddEventListener(EType.OUTPUT, tgb.talkTo)
+eventManager.AddEventListener(EType.BROADCAST, tts.ReadMessage)
+#eventManager.AddEventListener(EType.OUTPUT, tts.ReadMessage)
+
 
 
 
