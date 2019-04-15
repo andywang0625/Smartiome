@@ -66,13 +66,17 @@ class TelegramBotSource:
                 args[0]
                 command = ""
                 for word in args:
-                    command += (word+" ").lower()
+                    command += (word+" ")
                 if "(update)" not in command:
-                    command += "(update)"
+                    if "(" in command:
+                        command = command.replace("(", "(update, ")
+                    else:
+                        command += "(update)"
+                command = command.replace("?", "help")
                 eval(command)
 
             except BaseException as e:
-                self.logger.printError("Getting Info", target="TelegramBotSource")
+                self.logger.printError("Getting Info-"+str(e), target="TelegramBotSource")
                 event = Event(type_ = EType.OUTPUT)
                 event.data["Event"] = "Failed to run command: "+command
                 event.data["ChatId"] = update.message.chat_id

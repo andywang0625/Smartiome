@@ -4,6 +4,8 @@ from datetime import datetime
 from threading import *
 import json
 from Smartiome.Auxillaries.SystemLogger import *
+from Smartiome.Auxillaries.Server import *
+from Smartiome.Adaptors.Controller.DeviceManager import *
 
 logger = SystemLogger()
 
@@ -49,20 +51,30 @@ def TelegramBotSource(logger, dp, updater):
     from Smartiome.Adaptors.Backend.TelegramBotSource import TelegramBotSource
     Source = TelegramBotSource(eventManager, EType.COMMAND, logger, dp, updater)
 
+def ManagerServiceInit(port=2333):
+    return ManagerService(logger=logger,eventManager=eventManager, port=port)
+
 from Smartiome.Adaptors.Frontend.TTSLinstenner import TTSLinstener
 tts = TTSLinstener()
 tts.init(logger=logger, eventManager=EventManager, TYPE=EType.BROADCAST)
-
 tgb, dp, updater = TelegramBot()
+ms = ManagerServiceInit(14000)
+
+#Resgiger Linsteners
+
 eventManager.AddEventListener(EType.BROADCAST, tgb.talkTo)
 eventManager.AddEventListener(EType.OUTPUT, tgb.talkTo)
 eventManager.AddEventListener(EType.BROADCAST, tts.ReadMessage)
+eventManager.AddEventListener(EType.INNEREVENT, tts.ReadMessage)
+eventManager.AddEventListener(EType.DEVICEEVENT, ms.ReadMessage)
 #eventManager.AddEventListener(EType.OUTPUT, tts.ReadMessage)
 
+#
 
 
-
+ms.start()
 eventManager.Start()
+
 TelegramBotSource(logger, dp, updater)
 
 

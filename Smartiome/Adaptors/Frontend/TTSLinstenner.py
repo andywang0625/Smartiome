@@ -18,7 +18,7 @@ class TTSLinstener():
         tts = gTTS('TTS Linstener Enabled', 'en')
         t = str(int(time.time()))
         tts.save("tmp/"+t+".mp3")
-        playsound.playsound("tmp/"+t+".mp3")
+        #playsound.playsound("tmp/"+t+".mp3")
         os.remove("tmp/"+t+".mp3")
         del tts
         pass

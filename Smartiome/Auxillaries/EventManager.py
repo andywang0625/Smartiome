@@ -6,6 +6,7 @@ class EType(object):
     BROADCAST = "broadcast"
     COMMAND = "command"
     OUTPUT = "output"
+    DEVICEEVENT = "deviceevent"
 
 
 class EventManager:
