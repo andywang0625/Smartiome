@@ -1,4 +1,4 @@
-from Smartiome.Auxillaries.EventManager import *
+from Smartiome.Core.EventManager import *
 from Smartiome.Auxillaries.SystemManager import *
 
 

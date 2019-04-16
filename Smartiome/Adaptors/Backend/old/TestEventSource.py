@@ -1,5 +1,5 @@
 import sys
-from Smartiome.Auxillaries.EventManager import *
+from Smartiome.Core.EventManager import *
 
 
 class TestEventSource:

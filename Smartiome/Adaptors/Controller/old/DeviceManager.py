@@ -1,5 +1,5 @@
 from Smartiome.Auxillaries.Server import *
-from Smartiome.Auxillaries.EventManager import *
+from Smartiome.Core.EventManager import *
 import pickle
 
 

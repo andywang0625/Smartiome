@@ -1,13 +1,41 @@
-from Smartiome.Auxillaries.EventManager import *
+from Smartiome.Core.EventManager import *
 import sys
 from datetime import datetime
 from threading import *
 import json
 from Smartiome.Auxillaries.SystemLogger import *
 from Smartiome.Auxillaries.Server import *
+from Smartiome.Adaptors import *
+from Smartiome.Core.APIManager import *
+
+
+# InitLogger
+logger = SystemLogger()
+
+# Init EventManager
+eventManager = EventManager(logger)
+
+# Init APIManager
+APIM = APIManager(logger, eventManager)
+
+# Resgiger Linstener for APIManager
+eventManager.AddEventListener(EType.BROADCAST, APIM.ReadMessage)
+
+
+# EventManager start
+eventManager.Start()
+
+# Your Code goes here
+
+
+
+
+
+
+'''
+#OLD
 from Smartiome.Adaptors.Controller.DeviceManager import *
 
-logger = SystemLogger()
 
 def test():
     EVENT_INCOMING = EType.BROADCAST
@@ -28,7 +56,7 @@ def test():
     timer = Timer(2, Source.SendMessage)
     timer.start()
 
-eventManager = EventManager()
+
 
 def TelegramBot():
     try:
@@ -60,24 +88,7 @@ tts.init(logger=logger, eventManager=EventManager, TYPE=EType.BROADCAST)
 tgb, dp, updater = TelegramBot()
 ms = ManagerServiceInit(14000)
 
-#Resgiger Linsteners
-
-eventManager.AddEventListener(EType.BROADCAST, tgb.talkTo)
-eventManager.AddEventListener(EType.OUTPUT, tgb.talkTo)
-eventManager.AddEventListener(EType.BROADCAST, tts.ReadMessage)
-eventManager.AddEventListener(EType.INNEREVENT, tts.ReadMessage)
-eventManager.AddEventListener(EType.DEVICEEVENT, ms.ReadMessage)
-#eventManager.AddEventListener(EType.OUTPUT, tts.ReadMessage)
-
-#
-
-
 ms.start()
-eventManager.Start()
-
 TelegramBotSource(logger, dp, updater)
-
-
-
-
-#ConsoleSource()
+ConsoleSource()
+'''

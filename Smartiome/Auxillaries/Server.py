@@ -1,4 +1,4 @@
-from Smartiome.Auxillaries.EventManager import *
+from Smartiome.Core.EventManager import *
 from socket import *
 import threading
 import pickle

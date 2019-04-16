@@ -1,7 +1,7 @@
 from os.path import dirname, basename, isfile
 from os import listdir
 
-raw_modules = listdir("Smartiome/Adaptors/Frontend")
+raw_modules = listdir("Smartiome/Adaptors/Controller")
 modules = []
 for module in raw_modules:
     if "__" in module:
