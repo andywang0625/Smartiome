@@ -4,9 +4,7 @@ from threading import *
 class EType(object):
     INNEREVENT = "innerevent"
     BROADCAST = "broadcast"
-    COMMAND = "command"
-    OUTPUT = "output"
-    DEVICEEVENT = "deviceevent"
+    ALL = "all"
 
 
 class EventManager:
@@ -48,7 +46,7 @@ class EventManager:
 
         if handler not in handlerList:
             handlerList.append(handler)
-        self.__handlers = handlerList
+        # self.__handlers = handlerList
 
     def RemoveEventLinstener(self, type_, handler):
         try:

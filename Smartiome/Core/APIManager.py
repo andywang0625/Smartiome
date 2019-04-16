@@ -8,10 +8,15 @@ class APIManager(object):
         self.EventManager = EventManager
 
     def ReadMessage(self, event):
+        #print(event)
         """
         ReadMessage Method is for being a Linstener
         arg1: Event(event) No BB
         """
+        if event.type_ == EType.BROADCAST:
+            # Enabled Broadcast Interfaces
+            self.PLUGINS["CommandLine"]()\
+                .ReceiveMessage(self.PLUGINS, event.data, need_eval=False)
         #pass message back to plugins
         pass
 
@@ -20,6 +25,7 @@ class APIManager(object):
         SendMessage Method is for being an Event Source
         arg1: Event(event)
         """
+        #print(event)
         self.EventManager.SendEvent(event)
 
 
@@ -34,7 +40,13 @@ class APIManager(object):
             print("No specified plugin")
             return
         else:
-            eval("self.PLUGINS[\""+plugin+"\"]()."+cmd+"(self.PLUGINS)")
+            if args != []:
+                self.SendMessage(eval("self.PLUGINS[\""+plugin+"\"]()."+cmd+"(self.PLUGINS, "
+                     + str(args)+")")) # Send args as str
+                # self.PLUGINS[plugin]().cmd(args) # Fucked up
+            else:
+                self.SendMessage(eval("self.PLUGINS[\""+plugin+"\"]()."+cmd+"(self.PLUGINS"
+                     +")")) # Send args as str
 
     @classmethod
     def plugin_register(cls, plugin_name):

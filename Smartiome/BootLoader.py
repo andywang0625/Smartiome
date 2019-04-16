@@ -26,7 +26,8 @@ eventManager.AddEventListener(EType.BROADCAST, APIM.ReadMessage)
 eventManager.Start()
 
 # Your Code goes here
-
+while True:
+    APIM.cmdRevoke("SendMessage", "CommandLine")
 
 
 
