@@ -19,15 +19,14 @@ eventManager = EventManager(logger)
 APIM = APIManager(logger, eventManager)
 
 # Resgiger Linstener for APIManager
-eventManager.AddEventListener(EType.BROADCAST, APIM.ReadMessage)
+eventManager.AddEventListener(EType.DEFAULT, APIM.ReadMessage)
 
 
 # EventManager start
 eventManager.Start()
 
 # Your Code goes here
-while True:
-    APIM.cmdRevoke("SendMessage", "CommandLine")
+# APIM.cmdRevoke("SendMessage", "CommandLine")
 
 
 

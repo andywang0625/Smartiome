@@ -2,10 +2,7 @@ from queue import Queue, Empty
 from threading import *
 
 class EType(object):
-    INNEREVENT = "innerevent"
-    BROADCAST = "broadcast"
-    ALL = "all"
-
+    DEFAULT = 0
 
 class EventManager:
     def __init__(self, logger):

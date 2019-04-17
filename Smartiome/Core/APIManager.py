@@ -13,10 +13,17 @@ class APIManager(object):
         ReadMessage Method is for being a Linstener
         arg1: Event(event) No BB
         """
-        if event.type_ == EType.BROADCAST:
-            # Enabled Broadcast Interfaces
-            self.PLUGINS["CommandLine"]()\
-                .ReceiveMessage(self.PLUGINS, event.data, need_eval=False)
+        if event.type_ == EType.DEFAULT:
+            # Enable DEFAULT Interfaces
+            for target in event.data["targets"]:
+                if target in self.PLUGINS:
+                    self.PLUGINS[target]().ReceiveMessage(
+                        self.PLUGINS, event.data["content"], str_list=False)
+
+            #for func in self.PLUGINS:
+            #    func().ReceiveMessage(self.PLUGINS,event., event.data, str_list=False)
+            #self.PLUGINS["CommandLine"]()\
+            #    .ReceiveMessage(self.PLUGINS, event.data, str_list=False)
         #pass message back to plugins
         pass
 
@@ -52,5 +59,8 @@ class APIManager(object):
     def plugin_register(cls, plugin_name):
         def wrapper(plugin):
             cls.PLUGINS.update({plugin_name:plugin})
+            plugin.__init__(plugin)
+            plugin.start(plugin)
+            print(plugin_name+" has been activitied.")
             return plugin
         return wrapper
