@@ -79,8 +79,9 @@ class APIManager(object):
     @classmethod
     def plugin_register(cls, plugin_name):
         def wrapper(plugin):
-            cls.PLUGINS.update({plugin_name:plugin})
-            plugin.__init__(plugin, cls.PLUGINS_EVENTS_QUEUE, cls.logger)
+            obj = object.__new__(plugin)
+            cls.PLUGINS.update({plugin_name:obj})
+            obj.__init__(cls.PLUGINS_EVENTS_QUEUE, cls.logger)
             print(plugin_name+" has been activitied.")
-            return plugin
+            return obj
         return wrapper
