@@ -9,14 +9,14 @@ from Smartiome.Adaptors import *
 from Smartiome.Core.APIManager import *
 
 
-# InitLogger
+# InitLogger for EventManager and BootLoader
 logger = SystemLogger()
 
 # Init EventManager
 eventManager = EventManager(logger)
 
 # Init APIManager
-APIM = APIManager(logger, eventManager)
+APIM = APIManager(eventManager)
 
 # Resgiger Linstener for APIManager
 eventManager.AddEventListener(EType.DEFAULT, APIM.ReadMessage)

@@ -1,12 +1,14 @@
 from Smartiome.Core.EventManager import *
 from queue import Queue, Empty
+from Smartiome.Auxillaries.SystemLogger import *
 
 
 class APIManager(object):
     PLUGINS = {}
     PLUGINS_EVENTS_QUEUE = Queue()
-    def __init__(self, logger, EventManager):
-        self.logger = logger
+    logger = SystemLogger()
+
+    def __init__(self, EventManager):
         self.EventManager = EventManager
 
     def ReadPluginsMessage(self):
@@ -23,7 +25,7 @@ class APIManager(object):
         #print(event)
         """
         ReadMessage Method is for being a Linstener
-        arg1: Event(event) No BB
+        arg1: A event - type: Event()
         """
         #self.PLUGINS["CommandLine"].ReceiveMessage(self.PLUGINS, event.data, str_list=False)
         if event.type_ == EType.DEFAULT:
@@ -78,7 +80,7 @@ class APIManager(object):
     def plugin_register(cls, plugin_name):
         def wrapper(plugin):
             cls.PLUGINS.update({plugin_name:plugin})
-            plugin.__init__(plugin, cls.PLUGINS_EVENTS_QUEUE)
+            plugin.__init__(plugin, cls.PLUGINS_EVENTS_QUEUE, cls.logger)
             print(plugin_name+" has been activitied.")
             return plugin
         return wrapper

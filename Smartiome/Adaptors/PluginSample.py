@@ -3,12 +3,17 @@ import threading
 import time
 
 
+"""
+You may need to change all PluginSample to your own plugin's name
+"""
+
 @APIManager.plugin_register("PluginSample")
 class PluginSample(threading.Thread):
-    def __init__(self, __queue, eventManager=None):
+    def __init__(self, __queue, logger, eventManager=None):
         super().__init__(self)
         self.eventManager = eventManager  # Allows Plugins send event
         self.__queue = __queue  # Allows APIManager Receive Messages
+        self.logger = logger
         self.start_worker(self)  # Start a worker to do something
         pass
 
