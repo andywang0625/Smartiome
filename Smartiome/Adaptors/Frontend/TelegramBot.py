@@ -30,9 +30,7 @@ class TelegramBot:
         self.dp.add_handler(CommandHandler(command="smt",
                                            callback=self.SendMessage,
                                            pass_args=True))
-        self.updater.start_polling()
-        self.updater.idle()
-        self.start_worker(self)  # Start a worker to do something
+        self.start_worker()  # Start a worker to do something
         pass
 
     def SendMessage(self, bot, update, args):
@@ -45,7 +43,7 @@ class TelegramBot:
         if args[0] == "hi":
             # print(args[0])
             event.data["targets"] = "CommandLine"
-            event.data["content"] = "hi "+str(update.message.chat_id)
+            event.data["content"] = ("hi "+str(update.message.chat_id))
         self.__queue.put(event)  # Put the event to the __queue
 
     def ReceiveMessage(self, PLUGINS, args, str_list=True):
@@ -69,14 +67,15 @@ class TelegramBot:
         start_worker uses to start the worker
         No need to change anything, unless you need to do so.
         """
-        # t = threading.Thread(target=self.worker, args=(self,))
-        # t.setDaemon(True)
-        # t.start()
-        # self.updater.idle()
+        t = threading.Thread(target=self.worker, args=())
+        t.setDaemon(True)
+        t.start()
 
     def worker(self):
         """
         Things need to keep running
         """
+        self.updater.start_polling()
+        # self.updater.idle()
         print("PluginSample Started")
         time.sleep(1)  # Prevent errors from being displayed during initialization

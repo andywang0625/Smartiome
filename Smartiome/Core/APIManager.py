@@ -32,11 +32,12 @@ class APIManager(object):
             # Enable DEFAULT Interfaces
             #print(event)
             if event.data["targets"] in self.PLUGINS:
-                print("yes")
+                # print("yes")
                 # self.PLUGINS["CommandLine"]().ReceiveMessage()
                 self.PLUGINS[event.data["targets"]].ReceiveMessage(
-                    self.PLUGINS[event.data["targets"]], self.PLUGINS,
-                     args=event.data["content"], str_list=False)
+                    self.PLUGINS,
+                    args=event.data["content"],
+                    str_list=False)
             else:
                 self.logger.printError("Calling "+event.data["targets"], target="APIManager")
             #    else:

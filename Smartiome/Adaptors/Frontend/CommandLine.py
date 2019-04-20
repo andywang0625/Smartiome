@@ -37,4 +37,4 @@ class CommandLine:
         time.sleep(1)
         while True:
             time.sleep(0.3)
-            self.SendMessage(self)
+            self.SendMessage()
