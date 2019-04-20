@@ -47,8 +47,8 @@ class PluginSample(threading.Thread):
         """
         Things need to keep running
         """
-        print("CommandLine Started")
-        time.sleep(1)
+        print("PluginSample Started")
+        time.sleep(1)  # Prevent errors from being displayed during initialization
         while True:
-            time.sleep(0.3)
-            self.SendMessage(self)
+            time.sleep(0.3)  # Prevent errors from being displayed during running
+            self.SendMessage(self) # Calling SendMessage
