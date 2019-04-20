@@ -9,6 +9,7 @@ class EventManager:
         self.__eventQueue = Queue()
         self.__active = False
         self.__thread = Thread(target=self.__Run)
+        self.__thread.setDaemon(True)
         self.__handlers = {}
         self.logger = logger
 

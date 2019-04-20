@@ -9,5 +9,5 @@ for module in raw_modules:
     if ".py" not in module:
         continue
     modules.append(module.replace(".py", ""))
-print(modules)
+print("Controllers: "+str(modules))
 __all__ = modules

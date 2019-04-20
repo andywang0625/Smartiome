@@ -20,15 +20,12 @@ APIM = APIManager(logger, eventManager)
 
 # Resgiger Linstener for APIManager
 eventManager.AddEventListener(EType.DEFAULT, APIM.ReadMessage)
-
-
 # EventManager start
 eventManager.Start()
 
 # Your Code goes here
 # APIM.cmdRevoke("SendMessage", "CommandLine")
-
-
+APIM.ReadPluginsMessage()
 
 
 
