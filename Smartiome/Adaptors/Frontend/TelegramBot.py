@@ -43,6 +43,7 @@ class TelegramBot:
         """
         event = Event(type_ = EType.DEFAULT)
         if args[0] == "hi":
+            # print(args[0])
             event.data["targets"] = "CommandLine"
             event.data["content"] = "hi "+str(update.message.chat_id)
         self.__queue.put(event)  # Put the event to the __queue

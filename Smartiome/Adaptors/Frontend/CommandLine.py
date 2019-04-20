@@ -4,9 +4,8 @@ import time
 
 
 @APIManager.plugin_register("CommandLine")
-class CommandLine(threading.Thread):
+class CommandLine:
     def __init__(self, __queue, eventManager=None):
-        threading.Thread.__init__(self)
         self.eventManager = eventManager  # Allows Plugins send event
         self.__queue = __queue
         print("CommandLine is starting...")
