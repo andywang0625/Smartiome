@@ -6,11 +6,11 @@ import time
 @APIManager.plugin_register("CommandLine")
 class CommandLine(threading.Thread):
     def __init__(self, __queue, eventManager=None):
-        super().__init__(self)
+        threading.Thread.__init__(self)
         self.eventManager = eventManager  # Allows Plugins send event
         self.__queue = __queue
         print("CommandLine is starting...")
-        self.start_worker(self)
+        self.start_worker()
         pass
 
     def SendMessage(self, PLUGINS=""):
@@ -29,7 +29,7 @@ class CommandLine(threading.Thread):
         pass
 
     def start_worker(self):
-        t = threading.Thread(target=self.worker, args=(self,))
+        t = threading.Thread(target=self.worker, args=())
         t.setDaemon(True)
         t.start()
 
