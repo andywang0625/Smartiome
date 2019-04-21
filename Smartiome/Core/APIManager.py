@@ -1,6 +1,7 @@
 from Smartiome.Core.EventManager import *
 from queue import Queue, Empty
 from Smartiome.Auxillaries.SystemLogger import *
+import threading
 
 """
 Generic Message Format:
@@ -11,12 +12,18 @@ Generic Message Format:
 """
 
 class APIManager(object):
+    lock = threading.Lock()
+    lock.acquire()
     PLUGINS = {}
     PLUGINS_EVENTS_QUEUE = Queue()
     logger = SystemLogger()
 
     def __init__(self, EventManager):
         self.EventManager = EventManager
+
+    def startWorkers(self):
+        for plu in self.PLUGINS.values():
+            plu.start_worker()
 
     def ReadPluginsMessage(self):
         print("Started")
@@ -37,19 +44,19 @@ class APIManager(object):
         #self.PLUGINS["CommandLine"].ReceiveMessage(self.PLUGINS, event.data, str_list=False)
         if event.type_ == EType.DEFAULT:
             # Enable DEFAULT Interfaces
-            if event.data["targets"] == "revoke":
+            if event.data["target"] == "revoke":
                 self.cmdRevoke(event.data["cmd"],
                                event.data["plugin"],
                                 event.data["args"])
             #print(event)
-            if event.data["targets"] in self.PLUGINS:
+            if event.data["target"] in self.PLUGINS:
                 # print("yes")
                 # self.PLUGINS["CommandLine"]().ReceiveMessage()
-                self.PLUGINS[event.data["targets"]].ReceiveMessage(
+                self.PLUGINS[event.data["target"]].ReceiveMessage(
                     self.PLUGINS,
                     event=event)
             else:
-                self.logger.printError("Calling "+event.data["targets"], target="APIManager")
+                self.logger.printError("Calling "+event.data["target"], target="APIManager")
             #    else:
             #        print("Not in the list of plugins")
 

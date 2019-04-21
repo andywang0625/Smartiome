@@ -10,12 +10,12 @@ class CommandLine:
         self.eventManager = eventManager  # Allows Plugins send event
         self.__queue = __queue
         print("CommandLine is starting...")
-        self.start_worker()
         pass
 
     def SendMessage(self, PLUGINS=""):
         event = Event(type_ = EType.DEFAULT)
-        event.data["targets"] = input("Targets:")
+        event.data["target"] = input("Target:")
+        event.data["source"] = "CommandLine"
         event.data["recipient"] = input("Recipient Id:")
         event.data["content"] = input("Content:")
         self.__queue.put(event)
@@ -29,10 +29,11 @@ class CommandLine:
             x = PrettyTable(["Event Attributes", "Values"])
             x.align["Event Attributes"] = "1"
             x.padding_width = 1
-            x.add_row(["Target", event.data["target"]])
+            x.add_row(["Target:", event.data["target"]])
+            x.add_row(["Source:", event.data["source"]])
             x.add_row(["Recipient Id:", event.data["recipient"]])
             x.add_row(["Message Content:", event.data["content"]])
-            x.add_row(["End of Message"])
+            print("\n")
             print(x)
         pass
 
@@ -42,11 +43,9 @@ class CommandLine:
         t.start()
 
     def worker(self):
-        global lock
-        if lock.acquire():
-            print("CommandLine Started")
-            time.sleep(1)
-            lock.release()
-            while True:
-                time.sleep(0.3)
-                self.SendMessage()
+        print("CommandLine Started")
+        time.sleep(1)
+        # lock.release()
+        while True:
+            time.sleep(0.3)
+            self.SendMessage()

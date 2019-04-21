@@ -31,7 +31,7 @@ class TelegramBot:
         self.dp.add_handler(CommandHandler(command="smt",
                                            callback=self.SendMessage,
                                            pass_args=True))
-        self.start_worker()  # Start a worker to do something
+        # self.start_worker()  # Start a worker to do something
         pass
 
     def SendMessage(self, bot, update, args):
@@ -41,21 +41,41 @@ class TelegramBot:
         arg2: **kwargs
         """
         event = Event(type_ = EType.DEFAULT)
+        event.data["source"] = "TelegramBot"
         if args[0] == "hi":
             # print(args[0])
-            event.data["targets"] = "CommandLine"
+            event.data["target"] = "CommandLine"
             event.data["content"] = ("hi "+str(update.message.chat_id))
-        elif args[0] == "-e":
+        elif args[0] == "-revoke":
             event.data["target"] = "revoke"
             event.data["cmd"] = args[1]
             event.data["plugin"] = args[2]
             event.data["args"] = args[3]
-        elif args[0] == "sys":
-            if args[1] == "system":
-                event.data["target"] = "TelegramBot"
-                event.data["content"] = SystemVersion()
-                # event.data["chat_id"] = str(update.message.chat_id)
 
+        elif args[0] == "-sys":
+            event.data["target"] = "SystemManager"
+            event.data["recipient"] = str(update.message.chat_id)
+            event.data["content"] = args[1]
+            pass
+        elif args[0] == "self":
+            event.data["target"] = "TelegramBot"
+            event.data["recipient"] = str(update.message.chat_id)
+            event.data["content"] = str(update.message.chat_id)
+
+        elif args[0] == "-event":
+            event.data["target"] = args[1]
+            if args[2] == "self":
+                event.data["recipient"] = str(update.message.chat_id)
+            else:
+                event.data["recipient"] = args[2]
+            num = 0
+            event.data["content"] = ""
+            for word in args:
+                if num < 3:
+                    num += 1
+                    continue
+                event.data["content"] += word+" "
+                # event.data["chat_id"] = str(update.message.chat_id)
         self.__queue.put(event)  # Put the event to the __queue
 
     def ReceiveMessage(self, PLUGINS, event=None, str_list=False):
@@ -66,13 +86,13 @@ class TelegramBot:
         arg3: str_list=True. If this method is called by eval, you may leave it True; otherwise, you need to pass False
         """
 
-        if str_list:
-            args = list(eval(args))
-
-        if args[0] == "session":
-            pass
+        if event:
+            # print("called")
+            if str_list:
+                event = Event(eval(event))
         try:
-            self.dp.bot.send_message(chat_id=args[0], text=args[1])
+            self.dp.bot.send_message(chat_id=int(event.data["recipient"]),
+                                     text=str(event.data["content"]))
         except:
             self.logger.printError("ReceiveMessage"
                                    ,target="TelegramBot")

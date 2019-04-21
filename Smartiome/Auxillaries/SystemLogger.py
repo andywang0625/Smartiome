@@ -8,7 +8,7 @@ class SystemLogger:
         self.logger = logging.getLogger('Smartiome')
 
     def printInfo(self, title, Command="", target="Smartiome"):
-        self.logger.info(title+ ' %s ', 'whoiam', extra={'target':target})
+        self.logger.info(title , extra={'target':target})
 
     def printError(self, action="action", info="", target="Smartiome"):
         self.logger.error( action+' Failed: %s', info, extra={'target':target})

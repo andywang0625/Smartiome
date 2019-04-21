@@ -7,11 +7,7 @@ from Smartiome.Auxillaries.SystemLogger import *
 from Smartiome.Auxillaries.Server import *
 from Smartiome.Adaptors import *
 from Smartiome.Core.APIManager import *
-import threading
 
-global lock
-lock = threading.Lock()
-lock.acquire()
 
 # InitLogger for EventManager and BootLoader
 logger = SystemLogger()
@@ -26,11 +22,10 @@ APIM = APIManager(eventManager)
 eventManager.AddEventListener(EType.DEFAULT, APIM.ReadMessage)
 # EventManager start
 eventManager.Start()
-
+APIM.startWorkers()
 # Your Code goes here
 # APIM.cmdRevoke("SendMessage", "CommandLine")
 APIM.ReadPluginsMessage()
-lock.release()
 
 
 '''
