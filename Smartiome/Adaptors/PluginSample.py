@@ -26,7 +26,7 @@ class PluginSample(threading.Thread):
         event = Event(type_ = EType.DEFAULT)
         self.__queue.put(event)  # Put the event to the __queue
 
-    def ReceiveMessage(self, PLUGINS, args, str_list=True):
+    def ReceiveMessage(self, PLUGINS, event=None, str_list=False):
         """
         ReceiveMessage is the method that's called after API Manager got a message.
         arg1: PLUGINS uses to reflush the list of APIs

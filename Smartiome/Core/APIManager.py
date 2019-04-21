@@ -2,6 +2,13 @@ from Smartiome.Core.EventManager import *
 from queue import Queue, Empty
 from Smartiome.Auxillaries.SystemLogger import *
 
+"""
+Generic Message Format:
+    data["target"]: str(plugin_name)
+    data["source"]: str(plugin_name)
+    (opt)data["recipient"]: str(recipient_id)
+    data["content"]: list(content or command)
+"""
 
 class APIManager(object):
     PLUGINS = {}
@@ -30,14 +37,17 @@ class APIManager(object):
         #self.PLUGINS["CommandLine"].ReceiveMessage(self.PLUGINS, event.data, str_list=False)
         if event.type_ == EType.DEFAULT:
             # Enable DEFAULT Interfaces
+            if event.data["targets"] == "revoke":
+                self.cmdRevoke(event.data["cmd"],
+                               event.data["plugin"],
+                                event.data["args"])
             #print(event)
             if event.data["targets"] in self.PLUGINS:
                 # print("yes")
                 # self.PLUGINS["CommandLine"]().ReceiveMessage()
                 self.PLUGINS[event.data["targets"]].ReceiveMessage(
                     self.PLUGINS,
-                    args=event.data["content"],
-                    str_list=False)
+                    event=event)
             else:
                 self.logger.printError("Calling "+event.data["targets"], target="APIManager")
             #    else:

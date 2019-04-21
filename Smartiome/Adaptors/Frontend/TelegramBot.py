@@ -6,6 +6,7 @@ from telegram import InlineQueryResultArticle, ParseMode, InputTextMessageConten
 from Smartiome.Core.EventManager import *
 from Smartiome.Auxillaries.SystemConf import *
 from Smartiome.Auxillaries.UserControl import *
+from Smartiome.Auxillaries.SystemManager import *
 from Smartiome.Core.APIManager import *
 import threading
 import time
@@ -44,21 +45,37 @@ class TelegramBot:
             # print(args[0])
             event.data["targets"] = "CommandLine"
             event.data["content"] = ("hi "+str(update.message.chat_id))
+        elif args[0] == "-e":
+            event.data["target"] = "revoke"
+            event.data["cmd"] = args[1]
+            event.data["plugin"] = args[2]
+            event.data["args"] = args[3]
+        elif args[0] == "sys":
+            if args[1] == "system":
+                event.data["target"] = "TelegramBot"
+                event.data["content"] = SystemVersion()
+                # event.data["chat_id"] = str(update.message.chat_id)
+
         self.__queue.put(event)  # Put the event to the __queue
 
-    def ReceiveMessage(self, PLUGINS, args, str_list=True):
+    def ReceiveMessage(self, PLUGINS, event=None, str_list=False):
         """
         ReceiveMessage is the method that's called after API Manager got a message.
         arg1: PLUGINS uses to reflush the list of APIs
         arg2: Args is the message passes into
         arg3: str_list=True. If this method is called by eval, you may leave it True; otherwise, you need to pass False
         """
+
         if str_list:
             args = list(eval(args))
 
         if args[0] == "session":
             pass
-        self.dp.bot.send_message(chat_id=args[0], text=args[1])
+        try:
+            self.dp.bot.send_message(chat_id=args[0], text=args[1])
+        except:
+            self.logger.printError("ReceiveMessage"
+                                   ,target="TelegramBot")
         # Handling the messages
         pass
 
@@ -70,6 +87,9 @@ class TelegramBot:
         t = threading.Thread(target=self.worker, args=())
         t.setDaemon(True)
         t.start()
+
+    def test(self):
+        print("Hello")
 
     def worker(self):
         """

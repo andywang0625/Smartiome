@@ -1,4 +1,5 @@
 from Smartiome.Core.APIManager import *
+from prettytable import PrettyTable
 import threading
 import time
 
@@ -15,16 +16,24 @@ class CommandLine:
     def SendMessage(self, PLUGINS=""):
         event = Event(type_ = EType.DEFAULT)
         event.data["targets"] = input("Targets:")
+        event.data["recipient"] = input("Recipient Id:")
         event.data["content"] = input("Content:")
         self.__queue.put(event)
         # print(self.__queue.qsize())
 
-    def ReceiveMessage(self, PLUGINS, args, str_list=True):
-        # print("called")
-        if str_list:
-            print(list(eval(args)))
-        else:
-            print(args)
+    def ReceiveMessage(self, PLUGINS, event=None, str_list=False):
+        if event:
+            # print("called")
+            if str_list:
+                event = Event(eval(event))
+            x = PrettyTable(["Event Attributes", "Values"])
+            x.align["Event Attributes"] = "1"
+            x.padding_width = 1
+            x.add_row(["Target", event.data["target"]])
+            x.add_row(["Recipient Id:", event.data["recipient"]])
+            x.add_row(["Message Content:", event.data["content"]])
+            x.add_row(["End of Message"])
+            print(x)
         pass
 
     def start_worker(self):
@@ -33,8 +42,11 @@ class CommandLine:
         t.start()
 
     def worker(self):
-        print("CommandLine Started")
-        time.sleep(1)
-        while True:
-            time.sleep(0.3)
-            self.SendMessage()
+        global lock
+        if lock.acquire():
+            print("CommandLine Started")
+            time.sleep(1)
+            lock.release()
+            while True:
+                time.sleep(0.3)
+                self.SendMessage()
