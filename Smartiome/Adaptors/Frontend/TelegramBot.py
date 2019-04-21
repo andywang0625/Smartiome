@@ -57,6 +57,17 @@ class TelegramBot:
             event.data["recipient"] = str(update.message.chat_id)
             event.data["content"] = args[1]
             pass
+        elif args[0] == "-dm":
+            event.data["target"] = "DeviceManager"
+            event.data["recipient"] = str(update.message.chat_id)
+            num = 0
+            event.data["content"] = ""
+            for word in args:
+                if num < 1:
+                    num += 1
+                    continue
+                event.data["content"] += word+" "
+
         elif args[0] == "self":
             event.data["target"] = "TelegramBot"
             event.data["recipient"] = str(update.message.chat_id)

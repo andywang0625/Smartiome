@@ -42,7 +42,7 @@ class PluginSample:
         arg3: str_list=True. If this method is called by eval, you may leave it True; otherwise, you need to pass False
         """
         if str_list:
-            event = list(eval(event))
+            event = object(eval(event))
 
         # Handling the messages
         pass
@@ -52,7 +52,7 @@ class PluginSample:
         start_worker uses to start the worker
         No need to change anything, unless you need to do so.
         """
-        t = threading.Thread(target=self.worker, args=(self,))
+        t = threading.Thread(target=self.worker, args=())
         t.setDaemon(True)
 
         # You may not need to start it as a Controller

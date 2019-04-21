@@ -12,7 +12,7 @@ You may need to change all PluginSample to your own plugin's name
 
 @APIManager.plugin_register("SystemManager")
 class SystemManager:
-    SYSTEMVERSION = "April(Beta) 1.3.1"
+    SYSTEMVERSION = "April(Beta) 1.4.1"
 
     def __init__(self, __queue, logger, eventManager=None):
         self.eventManager = eventManager  # Allows Plugins send event
@@ -50,7 +50,7 @@ class SystemManager:
         arg3: str_list=True. If this method is called by eval, you may leave it True; otherwise, you need to pass False
         """
         if str_list:
-            event = list(eval(event))
+            event = object(eval(event))
         # print(event.data["content"])
         # Handling the messages
         if "sysver" in event.data["content"]:
