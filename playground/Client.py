@@ -65,6 +65,9 @@ class client(threading.Thread):
     def run(self):
         message = {}
         message["device"] = (input("Client> Name:"))
+        self.devname = message["device"]
+        if self.devname == "":
+            return
         message["content"] = "register"
         message["type"] = "basic"
         message = pickle.dumps(message)
@@ -95,6 +98,7 @@ class client(threading.Thread):
         return verstr, detailver, compiler
 
     def getSystemInfo(self):
+        info = "System Info-"+self.devname
         info = "RAM Usage:\t"+str(psutil.virtual_memory().percent)+"%"+"\n"
         psutil.cpu_percent(None)
         time.sleep(3)
